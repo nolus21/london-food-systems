@@ -147,7 +147,7 @@
     display:block; font-size:clamp(16px,1.8vw,22px); font-weight:400; letter-spacing:0;
     color:var(--paper-dim); margin-top:6px;
   }
-  .section-head p{color:var(--paper-dim); font-size:16px; margin-top:14px;}
+  .section-head p{color:var(--paper-dim); font-size:16.5px; margin-top:14px;}
   .plain-summary{
     background: rgba(245,245,242,0.06); border-left:3px solid var(--paper-dim);
     padding:16px 20px; margin:18px 0 6px; max-width:680px;
@@ -214,9 +214,9 @@
   .axo2-text p{font-size:15.5px; color:var(--paper-dim); max-width:440px; margin:0 0 0 auto;}
   .axo2-row.flip .axo2-text p{margin:0 auto 0 0;}
   @media (max-width:860px){ .axo2-text p, .axo2-row.flip .axo2-text p{margin:0;} }
-  .axo2-text .actor-farmer{color:#d9a441;}
-  .axo2-text .actor-business{color:var(--demand);}
-  .axo2-text .actor-civic{color:var(--hub);}
+  .axo2-text .actor-farmer{color:#cfe4fa;}
+  .axo2-text .actor-business{color:#8fb8e8;}
+  .axo2-text .actor-civic{color:#5f93d6;}
   .axo2-graphic{display:flex; justify-content:center; perspective:1100px;}
   .axo2-plane-wrap{position:relative; width:100%; max-width:360px;}
   /* the UK relief map's real aspect (~0.68) is much taller-than-wide than
@@ -242,9 +242,9 @@
   .actor-shadow{fill:rgba(0,0,0,0.5); opacity:0.75;}
   .actor-stem{fill:none; stroke:rgba(245,245,242,0.2); stroke-width:1.2;}
   .axo2-dots .aloft{filter:drop-shadow(0 0 7px rgba(0,0,0,0.55));}
-  .axo2-dots .farmer{fill:#d9a441;}
-  .axo2-dots .business{fill:var(--demand);}
-  .axo2-dots .civic{fill:var(--hub);}
+  .axo2-dots .farmer{fill:#cfe4fa;}
+  .axo2-dots .business{fill:#8fb8e8;}
+  .axo2-dots .civic{fill:#5f93d6;}
 
   /* a live network, not scattered points: a pulsing mesh between nearby actors,
      civic organisations acting as the connective hubs, plus a few travelling
@@ -263,7 +263,7 @@
   }
   .axo2-dots circle:nth-of-type(3n+1){animation-delay:0.5s;}
   .axo2-dots circle:nth-of-type(3n+2){animation-delay:1.3s;}
-  .mesh-signal{fill:#f2ead9; opacity:0.85;}
+  .mesh-signal{fill:#dbe9f8; opacity:0.85;}
   .mesh-signal[data-path="1"]{offset-path:url(#meshLine1); animation:meshTravel 3.2s linear infinite;}
   .mesh-signal[data-path="2"]{offset-path:url(#meshLine2); animation:meshTravel 2.6s linear infinite; animation-delay:0.6s;}
   .mesh-signal[data-path="3"]{offset-path:url(#meshLine3); animation:meshTravel 2.9s linear infinite; animation-delay:1.2s;}
@@ -305,12 +305,91 @@
   }
   @keyframes inflowTravel{ from{offset-distance:0%;} to{offset-distance:100%;} }
 
-  #planeLondonGrey svg path{fill:#232320; stroke:var(--line); stroke-width:0.7;}
+  #planeLondonGrey svg path{fill:#1c222b; stroke:var(--line); stroke-width:0.7;}
 
   /* uk-relief.svg wraps a real SRTM-derived hillshade (Wikimedia Commons,
      CC BY-SA 3.0), cropped to Great Britain and re-toned for the dark theme --
      see the credit line under the section for attribution */
-  #planeUk svg image{opacity:0.92;}
+  /* It takes the stack's blue through a filter rather than a blended overlay:
+     the hillshade is transparent outside the coastline, and a blend would have
+     painted that whole box blue. Tuned against the image's own mid grey, which
+     lands on hsl(214, 61%) -- the borough ramp's blue. */
+  #planeUk svg image{
+    opacity:0.92;
+    filter:sepia(1) saturate(3) hue-rotate(174deg) brightness(0.96);
+  }
+
+  /* ---- The ask, after the stack: its own held screen, and the same ball in
+     the same water as the conditions figure. At rest it floats and bobs; reach
+     for it and it dives, which is the one bit of motion on the page that is
+     asking for something. ---- */
+  .cta-dive{
+    min-height:60vh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; gap:26px; padding:40px 0 20px;
+  }
+  .cta-dive-lead{
+    color:var(--paper-dim); font-size:16px; line-height:1.62;
+    max-width:640px; margin:0;
+  }
+  .cta-ball{
+    position:relative; display:block; width:clamp(210px,24vw,260px);
+    aspect-ratio:1; text-decoration:none; border-radius:50%;
+  }
+  .cta-ball-svg{display:block; width:100%; height:100%; overflow:visible;}
+  .cta-ball-label{
+    position:absolute; left:50%; top:39%; transform:translate(-50%,-50%);
+    width:74%; font-family:var(--display); font-weight:700;
+    font-size:clamp(14px,1.5vw,17px); line-height:1.28; color:var(--ink);
+    transition:transform .5s cubic-bezier(.2,.75,.2,1), color .35s ease;
+  }
+  .cta-ball-arrow{display:inline-block; transition:transform .45s ease;}
+  .cta-top{fill:#c9ced3; fill-opacity:0.9;}
+  .cta-sub{fill:#c9ced3; fill-opacity:0.42;}
+  .cta-surface{fill:none; stroke:var(--paper); stroke-width:1.1;}
+  .cta-surface-front{opacity:0.5;}
+  .cta-surface-back{opacity:0.2;}
+  /* it floats: a small idle bob, so the ask has a pulse to it */
+  @keyframes ctaFloat{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    35%{transform:translateY(5px) rotate(0.9deg);}
+    70%{transform:translateY(-3px) rotate(-0.8deg);}
+  }
+  @keyframes ctaDrift{from{transform:translateX(0);} to{transform:translateX(-65px);}}
+  @keyframes ctaRing{
+    0%{transform:scale(0.55); opacity:0;}
+    18%{opacity:0.28;}
+    100%{transform:scale(1.3); opacity:0;}
+  }
+  .cta-dip{
+    transform-box:fill-box; transform-origin:center;
+    animation:ctaFloat 6s ease-in-out infinite;
+    transition:transform .6s cubic-bezier(.2,.75,.2,1);
+  }
+  .cta-surface-front{animation:ctaDrift 7s linear infinite;}
+  .cta-surface-back{animation:ctaDrift 11s linear infinite reverse;}
+  /* the rings only run while it is diving */
+  .cta-ripple{
+    fill:none; stroke:var(--paper); stroke-width:1; opacity:0;
+    transform-box:fill-box; transform-origin:center;
+  }
+  .cta-ball:hover .cta-ripple, .cta-ball:focus-visible .cta-ripple{animation:ctaRing 1.6s ease-out infinite;}
+  .cta-ripple-2{animation-delay:.55s;}
+  /* the dive itself: the waterline stays put, so sinking the ball is all it takes */
+  .cta-ball:hover .cta-dip, .cta-ball:focus-visible .cta-dip{
+    animation:none; transform:translateY(50px);
+  }
+  .cta-ball:hover .cta-dip-deep, .cta-ball:focus-visible .cta-dip-deep{transform:translateY(55px);}
+  .cta-ball:hover .cta-ball-label, .cta-ball:focus-visible .cta-ball-label{
+    transform:translate(-50%,-50%) translateY(15px);
+  }
+  .cta-ball:hover .cta-ball-arrow, .cta-ball:focus-visible .cta-ball-arrow{transform:translate(2px,-2px);}
+  .cta-ball:focus{outline:none;}
+  .cta-ball:focus-visible{outline:1px dashed var(--line-strong); outline-offset:8px;}
+  @media (prefers-reduced-motion: reduce){
+    .cta-dip, .cta-surface-front, .cta-surface-back{animation:none;}
+    .cta-ball:hover .cta-ripple, .cta-ball:focus-visible .cta-ripple{animation:none; opacity:0.18;}
+  }
+  @media (max-width:600px){ .cta-dive{min-height:0; padding:24px 0 8px; gap:20px;} }
 
   /* ===================== WHY NOW ===================== */
   .why-now-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:48px; align-items:start;}
@@ -594,7 +673,7 @@
   }
   .rp-fnd{
     position:relative; width:100%; max-width:380px; text-align:left;
-    pointer-events:auto; cursor:default; border-radius:10px; padding:6px;
+    pointer-events:auto; cursor:default; border-radius:8px; padding:6px;
   }
   .rp-fnd:focus{outline:none;}
   .rp-fnd:focus-visible{outline:1px dashed var(--line-strong); outline-offset:4px;}
@@ -762,10 +841,17 @@
   }
 
   /* ===================== REFRAME ===================== */
+  /* the argument runs down the left -- question, then the four moves under
+     it -- and the ball holds the right on its own, where it has room to be big */
   .reframe{
-    display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:start;
+    display:grid; grid-template-columns:1.02fr 0.98fr; gap:34px 56px; align-items:start;
   }
-  @media (max-width:900px){ .reframe{grid-template-columns:1fr;} }
+  .reframe > .reveal:first-child{grid-column:1; grid-row:1;}
+  .reframe .body{grid-column:1; grid-row:2;}
+  @media (max-width:900px){
+    .reframe{grid-template-columns:1fr; gap:30px;}
+    .reframe > .reveal:first-child, .reframe .body{grid-column:1; grid-row:auto;}
+  }
   .reframe .big-quote{
     font-family:var(--display); font-weight:700;
     font-size:clamp(24px,3vw,34px); line-height:1.22;
@@ -783,12 +869,19 @@
      goes out of focus. a full-width band so the row above stays level, and the
      whole thing centred on the section */
   .cond-circle{
-    grid-column:1 / -1; margin:14px 0 0; padding-top:40px; border-top:1px solid var(--line-strong);
-    display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px;
+    grid-column:2; grid-row:1 / span 2; margin:0; padding:0;
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px;
   }
-  .cond-disc{display:block; width:100%; max-width:320px; height:auto; overflow:visible;}
-  .cond-above{fill:var(--paper); fill-opacity:0.88;}
-  .cond-below{fill:var(--paper); fill-opacity:0.5;}
+  /* has to sit after the rule above rather than with the other mobile
+     overrides: at equal specificity the later declaration wins, and a
+     grid-column:2 that survives would conjure a second column back */
+  @media (max-width:900px){
+    .cond-circle{grid-column:1; grid-row:auto; margin-top:8px;}
+  }
+  .cond-disc{display:block; width:100%; max-width:440px; height:auto; overflow:visible;}
+  /* silver rather than paper: at full white the ball read as a hole in the page */
+  .cond-above{fill:#c9ced3; fill-opacity:0.7;}
+  .cond-below{fill:#c9ced3; fill-opacity:0.38;}
   /* The waterline holds still and the ball rides over it, so the split
      between sharp and blurred walks up and down the ball on its own. Both
      halves share one bob timing to stay in register at the surface; the
@@ -840,7 +933,7 @@
   .cond-ex-above{color:var(--paper); opacity:0.72;}
   .cond-ex-below{color:var(--paper-dim); opacity:0.5;}
   @media (max-width:600px){ .cond-ex{gap:5px 12px; font-size:9.5px;} }
-  .cond-circle figcaption{font-size:15px; color:var(--paper-dim); line-height:1.6; margin:6px 0 0; max-width:520px;}
+  .cond-circle figcaption{font-size:14.5px; color:var(--paper-dim); line-height:1.6; margin:4px 0 0; max-width:460px;}
   .reframe .body p{margin:0 0 16px; color:var(--paper-dim); font-size:16.5px;}
   .compare{
     display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:26px;
@@ -882,7 +975,7 @@
     padding-top:30px; border-top:1px solid var(--line-strong); margin-bottom:22px;
   }
   @media (max-width:760px){ .pf-portfolio-head{flex-direction:column; align-items:flex-start; gap:16px;} }
-  .pf-portfolio-title{font-family:var(--display); font-size:clamp(20px,2.2vw,26px); margin:12px 0 10px;}
+  .pf-portfolio-title{font-family:var(--display); font-size:clamp(21px,2.4vw,27px); margin:12px 0 10px;}
   .pf-portfolio-lede{font-size:15px; color:var(--paper-dim); line-height:1.6; margin:0; max-width:780px;}
   .pf-toggle{
     flex:none; background:none; border:1px solid var(--line-strong); border-radius:999px;
@@ -969,8 +1062,17 @@
     transition:transform 1.6s cubic-bezier(.2,.75,.2,1) .2s, fill 1s ease 1.5s, stroke 1s ease 1.5s;
   }
   .axo2-row.in #govPlaneLondon svg path{transform:none;}
+  /* every borough lights as it joins, on its own delay, so the coalition
+     spreads out of Camden instead of switching on in one block */
+  .axo2-row.in #govPlaneLondon svg path.is-joining{
+    fill:rgba(122,179,239,0.26); stroke:rgba(122,179,239,0.44);
+    transition:transform 1.6s cubic-bezier(.2,.75,.2,1) .2s,
+               fill .9s ease var(--jd, 1s), stroke .9s ease var(--jd, 1s);
+  }
   .axo2-row.in #govPlaneLondon svg path.is-founding{
-    fill:rgba(122,179,239,0.38); stroke:rgba(122,179,239,0.6);
+    fill:rgba(122,179,239,0.44); stroke:rgba(122,179,239,0.68);
+    transition:transform 1.6s cubic-bezier(.2,.75,.2,1) .2s,
+               fill .9s ease var(--jd, .9s), stroke .9s ease var(--jd, .9s);
   }
   .axo2-row.in #govPlaneLondon svg #Camden{
     fill:rgba(122,179,239,0.72); stroke:rgba(176,214,248,0.9);
@@ -1025,12 +1127,35 @@
   .reading-list a:hover{text-decoration-color:var(--paper);}
 
   /* ===================== HORIZONS ===================== */
-  .horizons{display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--line);}
-  @media (max-width:860px){ .horizons{grid-template-columns:1fr;} }
-  .horizon{padding:26px 24px; border-left:1px solid var(--line);}
-  .horizon:first-child{border-left:none;}
-  @media (max-width:860px){ .horizon{border-left:none; border-top:1px solid var(--line);} .horizon:first-child{border-top:none;} }
-  .horizon .htag{font-family:var(--mono); font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim);}
+  /* three horizons on a cone rather than in three equal boxes: one point now,
+     opening out as it goes, the three moves outlined on top of it */
+  /* the cone has to be taller than the cards or they would cover it: the
+     opening reads in the bands above and below the row */
+  .horizons{position:relative; padding:clamp(34px,5vw,62px) 0;}
+  .hz-cone{position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
+  .hz-edge{fill:none; stroke:rgba(245,245,242,0.2); stroke-width:1;}
+  .hz-axis{fill:none; stroke:rgba(245,245,242,0.13); stroke-width:1; stroke-dasharray:4 7;}
+  .hz-row{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(12px,1.4vw,20px);
+  }
+  .horizon{
+    padding:22px 20px; border:1px solid var(--line-strong);
+    background:rgba(16,16,16,0.86);
+  }
+  @media (max-width:860px){
+    .hz-row{grid-template-columns:1fr;}
+    .hz-cone{display:none;}
+    .horizons{padding:0;}
+  }
+  .horizon .htag{font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim);}
+  /* the marker grows with the horizon, the way the cone does */
+  .hz-dot{
+    display:inline-block; width:6px; height:6px; border-radius:50%;
+    background:var(--paper-dim); margin-right:9px; vertical-align:middle;
+  }
+  .horizon:nth-child(2) .hz-dot{width:8px; height:8px;}
+  .horizon:nth-child(3) .hz-dot{width:10px; height:10px; background:none; border:1px solid var(--paper-dim);}
   .horizon h4{font-size:18px; margin:10px 0 10px;}
   .horizon p{font-size:14.5px; color:var(--paper-dim); margin:0;}
 
@@ -1075,10 +1200,14 @@
   .foot-brand{font-family:var(--mono); font-size:13px; max-width:340px; color:var(--paper-dim); line-height:1.6;}
   .foot-brand strong{color:var(--paper); font-family:var(--display); display:block; font-size:16px; margin-bottom:10px;}
   .foot-links{display:flex; gap:36px; flex-wrap:wrap;}
-  .foot-col h5{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--paper-dim); margin-bottom:12px;}
+  .foot-col h5{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--paper-dim); margin-bottom:12px;}
   .foot-col a{display:block; font-size:14px; margin-bottom:8px; text-decoration:none; color:var(--paper); opacity:0.85;}
   .foot-col a:hover{color:var(--paper); opacity:1;}
   .foot-bottom{margin-top:44px; padding-top:20px; border-top:1px solid var(--line); font-family:var(--mono); font-size:11.5px; color:var(--paper-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  /* the hillshade is CC BY-SA, so the credit has to live somewhere -- it just
+     does not have to live next to the ask */
+  .foot-credit{opacity:0.62; flex-basis:100%;}
+  .foot-credit a{color:inherit; text-decoration:underline;}
 
   /* reveal on scroll — visible by default; JS opts elements into the fade-in.
      If JS fails for any reason, content stays visible, never hidden. */
@@ -1139,7 +1268,7 @@
 <div class="wrap"><div class="roadline"></div></div>
 
 <!-- ===================== AUDIENCE ===================== -->
-<section class="tight" id="audience">
+<section id="audience">
   <div class="wrap">
     <div class="section-head reveal">
       <div class="eyebrow">WHO THIS IS FOR</div>
@@ -1180,7 +1309,7 @@
                 <stop offset="100%" stop-color="#7ab3ef" stop-opacity="0"/>
               </radialGradient>
             </defs>
-            <circle class="inflow-glow" cx="622" cy="308" r="260" fill="url(#camdenGlow)"/>
+            <circle class="inflow-glow" cx="622" cy="322" r="224" fill="url(#camdenGlow)"/>
             <!-- roads and traffic are generated: fourteen of them, starting
                  outside London, so they aren't kept by hand here -->
           </svg>
@@ -1304,10 +1433,56 @@
   </div>
 
   <div class="wrap">
-    <div class="reveal" style="margin-top:12px;">
-      <p style="color:var(--paper-dim); font-size:15px; max-width:640px; margin:0 0 16px;">Whether you lead a council, think about a cross-borough coalition, work in national government, you’re already doing this work on the ground, or want to help develop financing and economic infrastructure around it — tell us where you fit, and how you’d want to be part of the next phase.</p>
-      <a class="btn solid" href="https://form.typeform.com/to/wh0nI0m0" target="_blank" rel="noopener">Tell us where you fit ↗</a>
-      <p class="crisis-sources" style="margin-top:18px;">National relief base: <a href="https://commons.wikimedia.org/wiki/File:United_Kingdom_relief_location_map.png" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 3.0.</p>
+    <div class="cta-dive reveal">
+      <p class="cta-dive-lead">Whether you lead a council, think about a cross-borough coalition, work in national government, you’re already doing this work on the ground, or want to help develop financing and economic infrastructure around it — tell us where you fit, and how you’d want to be part of the next phase.</p>
+      <!-- the same ball, the same water: at rest it floats and bobs, and it
+           dives when you reach for it -->
+      <a class="cta-ball" href="https://form.typeform.com/to/wh0nI0m0" target="_blank" rel="noopener" aria-label="Tell us where you fit — opens a short form">
+        <svg class="cta-ball-svg" viewBox="0 0 260 260" aria-hidden="true">
+          <defs>
+            <filter id="ctaBlur" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="6"/>
+            </filter>
+            <path id="ctaWave" d="M-130,176 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0"/>
+            <clipPath id="ctaAbove"><path d="M-130,176 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 L390,-80 L-130,-80 Z"/></clipPath>
+            <clipPath id="ctaBelow"><path d="M-130,176 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 q16.25,-3.5 32.5,0 q16.25,3.5 32.5,0 L390,360 L-130,360 Z"/></clipPath>
+            <clipPath id="ctaFrame"><rect x="0" y="0" width="260" height="260"/></clipPath>
+            <radialGradient id="ctaSheen" cx="38%" cy="26%" r="80%">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+              <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="ctaWater" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f5f5f2" stop-opacity="0.1"/>
+              <stop offset="0.4" stop-color="#f5f5f2" stop-opacity="0.04"/>
+              <stop offset="1" stop-color="#f5f5f2" stop-opacity="0.008"/>
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#ctaFrame)">
+            <g clip-path="url(#ctaBelow)">
+              <rect x="-20" y="150" width="300" height="200" fill="url(#ctaWater)"/>
+            </g>
+            <!-- the submerged part: the waterline holds still, the ball moves -->
+            <g clip-path="url(#ctaBelow)" filter="url(#ctaBlur)">
+              <g class="cta-dip cta-dip-deep">
+                <circle class="cta-sub" cx="130" cy="112" r="78"/>
+              </g>
+            </g>
+            <g clip-path="url(#ctaBelow)">
+              <use class="cta-surface cta-surface-back" href="#ctaWave"/>
+            </g>
+            <g clip-path="url(#ctaAbove)">
+              <g class="cta-dip">
+                <circle class="cta-top" cx="130" cy="112" r="78"/>
+                <circle class="cta-sheen" cx="130" cy="112" r="78" fill="url(#ctaSheen)"/>
+              </g>
+            </g>
+            <ellipse class="cta-ripple" cx="130" cy="177" rx="62" ry="9"/>
+            <ellipse class="cta-ripple cta-ripple-2" cx="130" cy="177" rx="62" ry="9"/>
+            <use class="cta-surface cta-surface-front" href="#ctaWave"/>
+          </g>
+        </svg>
+        <span class="cta-ball-label">Tell us<br>where you fit <span class="cta-ball-arrow">↗</span></span>
+      </a>
     </div>
   </div>
 </section>
@@ -1661,7 +1836,7 @@
           <clipPath id="condBelow"><path d="M-160,126 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 L480,430 L-160,430 Z"/></clipPath>
           <clipPath id="condFrame"><rect x="0" y="0" width="320" height="320"/></clipPath>
           <radialGradient id="condSheen" cx="40%" cy="28%" r="82%">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="0.30"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.17"/>
             <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
           </radialGradient>
           <linearGradient id="condWater" x1="0" y1="0" x2="0" y2="1">
@@ -1700,6 +1875,8 @@
         <li>Assumptions about the future</li>
         <li>The value of good nutrition</li>
         <li>The externalities of poor diets</li>
+        <li>The economics of the food system</li>
+        <li>Monetary transition</li>
       </ul>
       <button type="button" class="rp-note rp-note-yes cond-cap" aria-label="What rebuilding the arrangement means">Rebuilding the arrangement<span class="rp-info-pop" role="tooltip">Public-interest grocers, contribution ledgers, part-volunteer/part-commercial ownership, open micro-procurement.</span></button>
       <figcaption>Adjustment only ever reaches the sharp edge above the line. Ownership, contribution and the externalities sit below it — never priced, so never in focus.</figcaption>
@@ -1906,7 +2083,7 @@
 </section>
 
 <!-- ===================== HORIZONS ===================== -->
-<section id="horizons" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+<section id="horizons" class="tight" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
       <div class="eyebrow">SEQUENCING THE RESPONSE</div>
@@ -1914,20 +2091,37 @@
       <p>The portfolio is built to be true at three different speeds at once — because the people in the room for this work are living in different horizons already.</p>
     </div>
     <div class="horizons reveal">
+      <!-- a cone of uncertainty: one point now, widening as it goes out, and
+           fading to nothing where it stops being a forecast -->
+      <svg class="hz-cone" viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="hzFade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#f5f5f2" stop-opacity="0.15"/>
+            <stop offset="0.5" stop-color="#f5f5f2" stop-opacity="0.06"/>
+            <stop offset="1" stop-color="#f5f5f2" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,210 L1200,6 L1200,414 Z" fill="url(#hzFade)"/>
+        <path class="hz-edge" d="M0,210 L1200,6" vector-effect="non-scaling-stroke"/>
+        <path class="hz-edge" d="M0,210 L1200,414" vector-effect="non-scaling-stroke"/>
+        <path class="hz-axis" d="M0,210 H1200" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hz-row">
       <div class="horizon">
-        <div class="htag">Now — before 5 Oct 2026</div>
+        <div class="htag"><span class="hz-dot"></span>Now — before 5 Oct 2026</div>
         <h4>Shock absorption</h4>
         <p>Food-price volatility and nutrition inequality are already moving cognition and health outcomes. The immediate, concrete move is standing up a Local Food Resilience Committee and responding to the Cabinet’s call for views before it closes — not waiting for a council procurement cycle to catch up.</p>
       </div>
       <div class="horizon">
-        <div class="htag">Next — 12–18 months</div>
+        <div class="htag"><span class="hz-dot"></span>Next — 12–18 months</div>
         <h4>Coalition &amp; charter</h4>
         <p>The Food Partnership publishes a declared work programme, four London boroughs sit down together on collective buying, and a policy briefing lands with national government inside its six-month window.</p>
       </div>
       <div class="horizon">
-        <div class="htag">2028 and beyond</div>
+        <div class="htag"><span class="hz-dot"></span>2028 and beyond</div>
         <h4>The labour shock</h4>
         <p>Automation reaches logistics and white-collar work at scale. Food-as-infrastructure is the argument for treating nutrition as social-contract security before that shock arrives — not the response to it afterwards.</p>
+      </div>
       </div>
     </div>
   </div>
@@ -2119,6 +2313,7 @@
     <div class="foot-bottom">
       <span>A LONDON-WIDE PORTFOLIO, 2026</span>
       <span>FOOD AS INFRASTRUCTURE — WORKING DRAFT · DARK MATTER LABS</span>
+      <span class="foot-credit">National relief base: <a href="https://commons.wikimedia.org/wiki/File:United_Kingdom_relief_location_map.png" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 3.0</span>
     </div>
   </div>
 </footer>
@@ -2241,11 +2436,17 @@
         it.el.style.setProperty('--oy', (dy / len * push).toFixed(1) + 'px');
       });
       if(!camden) return;
-      items.filter(function(it){ return it !== camden; })
+      /* every borough joins, not four of them -- and they light in the order
+         they would actually be reached, so the coalition spreads outward from
+         Camden rather than switching on all at once */
+      var ranked = items.filter(function(it){ return it !== camden; })
         .map(function(it){ return {it:it, d:Math.hypot(it.x - camden.x, it.y - camden.y)}; })
-        .sort(function(a, b){ return a.d - b.d; })
-        .slice(0, 4)
-        .forEach(function(n){ n.it.el.classList.add('is-founding'); });
+        .sort(function(a, b){ return a.d - b.d; });
+      var far = ranked.length ? ranked[ranked.length - 1].d : 1;
+      ranked.forEach(function(n, i){
+        n.it.el.classList.add(i < 4 ? 'is-founding' : 'is-joining');
+        n.it.el.style.setProperty('--jd', (0.9 + (n.d / far) * 1.7).toFixed(2) + 's');
+      });
     }
 
     /* Tier 3: proof travelling up from places that are organising, and the
