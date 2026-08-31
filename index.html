@@ -21,7 +21,8 @@
 
     --supply:#c98a3b;   /* ochre — Supply track  */
     --hub:#2e7d6b;      /* teal  — Hub track     */
-    --demand:#ff5a1f;   /* signal orange — Demand track */
+    --demand:#ff5a1f;   /* signal orange — Camden, the subject */
+    --alert:#ef4a34;    /* red — crisis, and only crisis */
 
     --supply-dim: rgba(201,138,59,0.14);
     --hub-dim: rgba(46,125,107,0.16);
@@ -326,8 +327,8 @@
   .crisis-caption{font-family:var(--display); font-size:15px; color:var(--paper); opacity:0.85; margin:0 0 14px; max-width:520px;}
   .crisis-chart-title{font-family:var(--display); font-weight:700; font-size:17px; color:var(--paper); margin:0 0 12px;}
   /* the 2022 note, sitting on the band it describes */
-  .cg-annot text{font-family:var(--display); font-size:12.5px; fill:#e8c34a;}
-  .cg-annot-tick{fill:none; stroke:#e8c34a; stroke-width:1; opacity:0.5;}
+  .cg-annot text{font-family:var(--display); font-size:12.5px; fill:var(--alert);}
+  .cg-annot-tick{fill:none; stroke:var(--alert); stroke-width:1; opacity:0.5;}
   /* the dotted continuation past 2026. it runs out beyond the chart to sit
      behind the big figures, so it only makes sense while they are beside the
      chart -- once they stack underneath it would just spill off the screen */
@@ -386,7 +387,7 @@
     display:block; width:100%; text-align:left; background:none; padding:0 0 0 15px;
     border:none; border-left:2px solid rgba(232,195,74,0.45); cursor:help;
   }
-  .crisis-endstat:hover, .crisis-endstat:focus-visible{border-left-color:#e8c34a;}
+  .crisis-endstat:hover, .crisis-endstat:focus-visible{border-left-color:var(--alert);}
   .crisis-endstat:focus{outline:none;}
   .crisis-endstat:focus-visible{outline:1px dashed var(--line-strong); outline-offset:4px;}
   /* the shock that produced the figure, on the figure itself -- it used to be a
@@ -405,21 +406,21 @@
     font-family:var(--mono); font-size:10.5px; line-height:1.5; opacity:0.75;
   }
   .ces-dot{
-    display:block; width:11px; height:11px; border-radius:50%; background:#e8c34a;
+    display:block; width:11px; height:11px; border-radius:50%; background:var(--alert);
     box-shadow:0 0 0 6px rgba(232,195,74,0.15); margin-bottom:14px;
   }
   .ces-num{
-    display:block; font-family:var(--display); font-weight:700; color:#e8c34a;
+    display:block; font-family:var(--display); font-weight:700; color:var(--alert);
     font-size:clamp(38px,5vw,68px); line-height:0.95; letter-spacing:-0.02em;
   }
   .ces-cap{display:block; font-size:13px; line-height:1.45; color:var(--paper-dim); margin-top:10px;}
   .ces-date{
     display:block; font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
-    text-transform:uppercase; color:#e8c34a; opacity:0.75; margin-top:7px;
+    text-transform:uppercase; color:var(--alert); opacity:0.75; margin-top:7px;
   }
   .cg-grid line{stroke:var(--line); stroke-width:1;}
   .cg-grid text{font-family:var(--mono); font-size:11px; fill:var(--paper-dim);}
-  .cg-bands rect{fill:rgba(255,214,64,0.13); stroke:rgba(255,214,64,0.3); stroke-width:1;}
+  .cg-bands rect{fill:rgba(239,74,52,0.14); stroke:rgba(239,74,52,0.34); stroke-width:1;}
   .cg-xaxis text{font-family:var(--mono); font-size:11px; fill:var(--paper-dim);}
   .cg-line{fill:none; stroke-width:2.2; stroke-linejoin:round; stroke-linecap:round;}
   .cg-fertiliser{stroke:#8f8fe8;}
@@ -428,7 +429,7 @@
   .crisis-legend{display:flex; gap:22px; flex-wrap:wrap; margin:14px 0 4px;}
   .crisis-legend span{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.03em; color:var(--paper-dim);}
   .crisis-legend i{width:14px; height:2.2px; display:inline-block; border-radius:2px;}
-  .cg-band-labels text{font-family:var(--mono); font-size:10.5px; fill:#e8c34a;}
+  .cg-band-labels text{font-family:var(--mono); font-size:10.5px; fill:var(--alert);}
   .crisis-sources{grid-column:1 / -1; font-size:12px; color:var(--paper-dim); opacity:0.7; margin-top:28px; max-width:900px; line-height:1.6;}
   /* the sources belong to the chart and the figures beside it, so the pill sits
      with them rather than at the foot of the section */
@@ -484,7 +485,7 @@
        should meet the diagram whole. one height for both stages: animating it
        resized the WebGL buffer on every frame of the transition */
     position:relative; margin-top:8px;
-    height:clamp(320px, calc(100vh - 300px), 620px);
+    height:clamp(320px, calc(100vh - 284px), 620px);
   }
   /* a quiet stretch of scroll while the diagram is pinned: the pathways view
      holds for the first part of it and becomes the portfolio view partway
@@ -532,7 +533,20 @@
       width:210px; max-width:72vw; font-size:11px; padding:9px 11px;
     }
   }
-  .rp-canvas{position:absolute; top:0; left:33%; bottom:0; width:45%; z-index:1;}
+  .rp-canvas{position:absolute; top:0; left:37.5%; bottom:0; width:42%; z-index:1;}
+  /* the layers are as good a target as the text beside them: four invisible
+     zones over the canvas, split at the midpoints between band centres, so
+     every pointer position belongs to the nearest wave */
+  .rp-hit{position:absolute; top:0; left:37.5%; bottom:0; width:42%; z-index:2;}
+  .rp-hit span{position:absolute; left:0; width:100%; display:block;}
+  .rp-hit span:nth-child(1){top:0; height:29.33%;}
+  .rp-hit span:nth-child(2){top:29.33%; height:20.67%;}
+  .rp-hit span:nth-child(3){top:50%; height:20.67%;}
+  .rp-hit span:nth-child(4){top:70.67%; bottom:0;}
+  @media (max-width:860px){ .rp-hit{display:none;} }
+  /* hovering either side of the pairing lights the other, so it is legible
+     which text belongs to which wave */
+  .rp-fnd:hover, .rp-fnd.is-hot{background:rgba(245,245,242,0.045);}
   .rp-canvas canvas{display:block;}
   /* the per-pathway waves are a narrow-screen thing only: on a wide screen
      the four bands are read together in the one canvas */
@@ -572,8 +586,10 @@
     margin-bottom:6px; white-space:normal;
   }
   .rp-labels{
-    position:absolute; top:0; left:0; bottom:0; width:31%; z-index:2; pointer-events:none;
-    display:flex; flex-direction:column; justify-content:space-between; gap:clamp(18px,3vh,40px);
+    --fs:1;
+    position:absolute; top:0; left:0; bottom:0; width:36%; z-index:2; pointer-events:none;
+    display:flex; flex-direction:column; justify-content:space-between;
+    gap:calc(clamp(8px,2vh,30px) * var(--fs, 1));
     padding-right:clamp(20px,4vw,56px);
   }
   .rp-fnd{
@@ -582,13 +598,16 @@
   }
   .rp-fnd:focus{outline:none;}
   .rp-fnd:focus-visible{outline:1px dashed var(--line-strong); outline-offset:4px;}
-  .rp-fnd .code{font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;}
-  .rp-fnd h4{font-family:var(--display); font-weight:700; font-size:clamp(16px,1.6vw,20px); line-height:1.2; margin:0 0 6px;}
-  .rp-fnd p{font-size:12.5px; line-height:1.44; color:var(--paper-dim); margin:0;}
+  .rp-fnd .code{font-family:var(--mono); font-size:calc(11px * var(--fs, 1)); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:calc(8px * var(--fs, 1));}
+  .rp-fnd h4{font-family:var(--display); font-weight:700; font-size:calc(clamp(15px,1.4vw,18px) * var(--fs, 1)); line-height:1.2; margin:0 0 calc(6px * var(--fs, 1));}
+  .rp-fnd p{font-size:calc(11.5px * var(--fs, 1)); line-height:1.4; color:var(--paper-dim); margin:0;}
+  .rp-labels.is-tight .rp-fnd p{
+    display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:var(--lines, 4); overflow:hidden;
+  }
   .rp-fnd-01 .code, .rp-fnd-01 h4{color:#e7964b;}
   .rp-fnd-03 .code, .rp-fnd-03 h4{color:#4fb488;}
   .rp-fnd-04 .code, .rp-fnd-04 h4{color:#c9ced3;}
-  .rp-fnd-02 .code, .rp-fnd-02 h4{color:#8fb0ff;}
+  .rp-fnd-02 .code, .rp-fnd-02 h4{color:#a98cf5;}
   .rp-info{
     position:relative; display:inline-grid; place-items:center; vertical-align:middle;
     width:16px; height:16px; margin-left:7px; margin-bottom:2px; padding:0;
@@ -632,6 +651,19 @@
   /* a pop carrying a short list rather than a single sentence. a <button> only
      takes phrasing content, so the items are spans with their own dash */
   .rp-note .rp-info-pop-wide{width:390px; max-width:min(82vw,400px);}
+  .note-head{display:flex; flex-wrap:wrap; align-items:center; gap:14px 18px;}
+  .note-lead{font-size:14px; color:var(--paper-dim); margin:0; max-width:520px;}
+  .note-body{
+    max-height:0; overflow:hidden; opacity:0; max-width:760px;
+    transition:max-height .42s ease, opacity .3s ease, margin-top .42s ease;
+    margin-top:0;
+  }
+  .note-block[data-open="true"] .note-body{opacity:1; margin-top:16px;}
+  .note-block[data-open="true"] .rp-note::after{content:"–";}
+  .note-body p{font-size:15px; line-height:1.62; color:var(--paper-dim); margin:0 0 12px;}
+  .note-body p:last-child{margin-bottom:0;}
+  .note-body a{color:var(--paper); text-decoration:underline; text-decoration-color:var(--supply);}
+  .note-body a:hover{color:var(--supply);}
   .rp-pop-lead{display:block; color:var(--paper); margin-bottom:9px;}
   .rp-pop-item{display:block; position:relative; padding-left:17px; margin-bottom:7px;}
   .rp-pop-item:last-child{margin-bottom:0;}
@@ -665,8 +697,8 @@
      outcomes column's right edge, so Health/Environmental land in that column
      while staying in the same arrow-connected row as the rest */
   .rp-flow-outer{
-    display:grid; grid-template-columns:1fr 1fr 0.845fr; gap:clamp(10px,2vw,30px);
-    width:67%; margin:0 0 0 33%; padding:0 8px;
+    display:grid; grid-template-columns:1fr 1fr 0.93fr; gap:clamp(10px,2vw,30px);
+    width:62.5%; margin:0 0 0 37.5%; padding:0 8px;
   }
   .rp-flow-outer-top{margin-bottom:20px;}
   .rp-flow-outer-bottom{margin-top:20px;}
@@ -757,7 +789,38 @@
   .cond-disc{display:block; width:100%; max-width:320px; height:auto; overflow:visible;}
   .cond-above{fill:var(--paper); fill-opacity:0.88;}
   .cond-below{fill:var(--paper); fill-opacity:0.5;}
-  .cond-line{stroke:var(--paper); stroke-width:1; stroke-dasharray:3 5; opacity:0.55;}
+  /* The waterline holds still and the ball rides over it, so the split
+     between sharp and blurred walks up and down the ball on its own. Both
+     halves share one bob timing to stay in register at the surface; the
+     submerged half sways a little wider, which reads as refraction. */
+  @keyframes condBob{
+    0%   {transform:translate(0,0) rotate(0deg);}
+    22%  {transform:translate(-2.4px,7px) rotate(1.3deg);}
+    48%  {transform:translate(0.8px,11px) rotate(-0.3deg);}
+    72%  {transform:translate(2.4px,2px) rotate(-1.4deg);}
+    88%  {transform:translate(1px,-3px) rotate(-0.6deg);}
+    100% {transform:translate(0,0) rotate(0deg);}
+  }
+  @keyframes condBobDeep{
+    0%   {transform:translate(0,0) rotate(0deg);}
+    22%  {transform:translate(-4.4px,7px) rotate(1.3deg);}
+    48%  {transform:translate(1.6px,11px) rotate(-0.3deg);}
+    72%  {transform:translate(4.4px,2px) rotate(-1.4deg);}
+    88%  {transform:translate(1.8px,-3px) rotate(-0.6deg);}
+    100% {transform:translate(0,0) rotate(0deg);}
+  }
+  /* one period of the wave, so the loop has no seam */
+  @keyframes condDrift{from{transform:translateX(0);} to{transform:translateX(-80px);}}
+  .cond-bob{transform-box:fill-box; transform-origin:center; animation:condBob 9s ease-in-out infinite;}
+  .cond-bob-deep{animation-name:condBobDeep;}
+  .cond-drift{animation:condDrift 9s linear infinite;}
+  .cond-drift-back{animation:condDrift 14s linear infinite reverse;}
+  .cond-surface{fill:none; stroke:var(--paper); stroke-width:1;}
+  .cond-surface-1{opacity:0.5;}
+  .cond-surface-2{opacity:0.2;}
+  @media (prefers-reduced-motion: reduce){
+    .cond-bob, .cond-drift, .cond-drift-back{animation:none;}
+  }
   /* the two readings hang off the halves they describe, so the page isn't
      saying the same thing twice */
   .cond-cap{margin:0;}
@@ -778,7 +841,7 @@
   .cond-ex-below{color:var(--paper-dim); opacity:0.5;}
   @media (max-width:600px){ .cond-ex{gap:5px 12px; font-size:9.5px;} }
   .cond-circle figcaption{font-size:15px; color:var(--paper-dim); line-height:1.6; margin:6px 0 0; max-width:520px;}
-  .reframe .body p{margin:0 0 16px; color:var(--paper); opacity:0.9; font-size:16.5px;}
+  .reframe .body p{margin:0 0 16px; color:var(--paper-dim); font-size:16.5px;}
   .compare{
     display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:26px;
   }
@@ -797,7 +860,7 @@
   @media (max-width:700px){ .tracks{grid-template-columns:1fr;} }
   /* each track takes the colour of the wave its items ride */
   .track.pw-01{--tk:#e7964b;}
-  .track.pw-02{--tk:#8fb0ff;}
+  .track.pw-02{--tk:#a98cf5;}
   .track.pw-03{--tk:#c9ced3;}
   .track.pw-04{--tk:#4fb488;}
   .track .swatch{background:var(--tk);}
@@ -885,14 +948,28 @@
        readable width and scrolls inside its own box instead */
     .gov-lock-svg{min-width:760px;}
   }
-  .gov-wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
-  @media (max-width:900px){ .gov-wrap{grid-template-columns:1fr;} }
-  .ladder{display:flex; flex-direction:column; gap:0;}
-  .rung{
-    border:1px solid var(--line); padding:20px 22px; position:relative;
-    display:grid; grid-template-columns:1fr 168px; gap:22px; align-items:center;
+  /* outranks .section-head p, which sets the grey body size */
+  .section-head .gov-question{
+    font-family:var(--display); font-weight:700; color:var(--paper);
+    font-size:clamp(17px,1.9vw,22px); line-height:1.35;
+    max-width:720px; margin:18px 0 0; padding-left:18px;
+    border-left:2px solid rgba(143,176,255,0.75);
   }
-  @media (max-width:900px){ .rung{grid-template-columns:1fr; gap:14px;} }
+  .gov-wrap{display:grid; grid-template-columns:1fr; gap:26px;}
+  .ladder{display:grid; grid-template-columns:repeat(3, 1fr); gap:0;}
+  /* one continuous box with two dividers, and the figures pushed to the foot
+     of each column so all three sit on the same line */
+  .rung{
+    border:1px solid var(--line); border-left-width:0; padding:22px 22px 24px; position:relative;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .rung:first-child{border-left-width:1px;}
+  .rung-figwrap{margin-top:auto;}
+  @media (max-width:900px){
+    .ladder{grid-template-columns:1fr;}
+    .rung{border-left-width:1px; border-top-width:0; gap:14px;}
+    .rung:first-child{border-top-width:1px;}
+  }
   /* one move per tier, drawn small: the empty middle of the table, the line
      that peers join rather than restart, the route and its window */
   .rung-fig{display:block; width:100%; max-width:168px; height:auto; overflow:visible;}
@@ -911,13 +988,12 @@
   .rf-gate{fill:none; stroke:#e05a3d; stroke-width:1.6; opacity:0.7;}
   /* the labels are captions in HTML rather than SVG text: at a 190px render
      the in-diagram type came out literally 7px, which nobody can read */
-  .rung-figwrap{margin:0; padding:0;}
+  .rung-figwrap{margin-top:auto; padding:0;}
   .rung-figwrap figcaption{
     font-family:var(--mono); font-size:10px; line-height:1.5; letter-spacing:0.03em;
     color:var(--paper-dim); opacity:0.8; margin-top:10px; text-align:center;
   }
   @media (max-width:900px){ .rung-figwrap figcaption{text-align:left; font-size:11px;} }
-  .rung + .rung{border-top:none;}
   .rung .tier{font-family:var(--mono); font-size:11.5px; letter-spacing:0.08em; color:var(--paper-dim); text-transform:uppercase;}
   .rung h4{font-size:17px; margin:8px 0 6px;}
   .rung p{font-size:14.5px; color:var(--paper-dim); margin:0;}
@@ -928,6 +1004,7 @@
   .callout .code{font-family:var(--mono); font-size:12px; color:var(--hub); letter-spacing:0.06em; display:block; margin-bottom:10px;}
   .callout p{margin:0 0 14px; opacity:0.92;}
   .callout p:last-child{margin-bottom:0;}
+  .precedent-row{margin-top:32px; border-top:1px dashed var(--line-strong); padding-top:24px;}
   .precedent-note{margin-top:32px; border-top:1px dashed var(--line-strong); padding-top:24px; max-width:760px;}
   .precedent-note .code{font-family:var(--mono); font-size:12px; letter-spacing:0.06em; display:block; margin-bottom:10px;}
   .precedent-note p{font-size:15px; color:var(--paper-dim); margin:0;}
@@ -1576,27 +1653,53 @@
         <li>Surplus redistribution</li>
       </ul>
       <svg class="cond-disc" viewBox="0 0 320 320" role="img" aria-labelledby="condTitle condDesc">
-        <title id="condTitle">One circle, cut by a waterline</title>
-        <desc id="condDesc">A single filled circle divided by a waterline. The smaller part above the line is in sharp focus — what adjustment can reach. The larger part below it is blurred and out of focus: the conditions the arrangement actually rests on.</desc>
+        <title id="condTitle">One ball, floating</title>
+        <desc id="condDesc">A single ball floating in water. The part riding above the surface is in sharp focus — what adjustment can reach. The larger part below the surface is blurred and out of focus: the conditions the arrangement actually rests on. The ball drifts and bobs, so the waterline walks slowly up and down it, but most of it never surfaces.</desc>
         <defs>
           <filter id="condBlur" x="-40%" y="-40%" width="180%" height="180%">
             <feGaussianBlur stdDeviation="9"/>
           </filter>
-          <clipPath id="condAbove"><rect x="-30" y="0" width="380" height="126"/></clipPath>
-          <clipPath id="condBelow"><rect x="-30" y="112" width="380" height="330"/></clipPath>
+          <!-- one wave, eight periods of 80 units, so a drift of exactly one
+               period loops seamlessly -->
+          <path id="condWave" d="M-160,126 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0"/>
+          <clipPath id="condAbove"><path d="M-160,126 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 L480,-90 L-160,-90 Z"/></clipPath>
+          <clipPath id="condBelow"><path d="M-160,126 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 q20,-4 40,0 q20,4 40,0 L480,430 L-160,430 Z"/></clipPath>
+          <clipPath id="condFrame"><rect x="0" y="0" width="320" height="320"/></clipPath>
           <radialGradient id="condSheen" cx="40%" cy="28%" r="82%">
             <stop offset="0" stop-color="#ffffff" stop-opacity="0.30"/>
             <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
           </radialGradient>
+          <linearGradient id="condWater" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f5f5f2" stop-opacity="0.11"/>
+            <stop offset="0.34" stop-color="#f5f5f2" stop-opacity="0.045"/>
+            <stop offset="1" stop-color="#f5f5f2" stop-opacity="0.008"/>
+          </linearGradient>
         </defs>
-        <g clip-path="url(#condBelow)" filter="url(#condBlur)">
-          <circle class="cond-below" cx="160" cy="160" r="128"/>
+        <g clip-path="url(#condFrame)">
+          <!-- the pool: a body of water, brighter where the light still
+               reaches, fading out with depth -->
+          <g clip-path="url(#condBelow)">
+            <rect x="-40" y="96" width="400" height="320" fill="url(#condWater)"/>
+          </g>
+          <!-- the submerged part, swaying a touch wider than the rest: refraction -->
+          <g clip-path="url(#condBelow)" filter="url(#condBlur)">
+            <g class="cond-bob cond-bob-deep">
+              <circle class="cond-below" cx="160" cy="160" r="128"/>
+            </g>
+          </g>
+          <!-- the surface itself, and the rings where the ball meets it -->
+          <g clip-path="url(#condBelow)">
+            <use class="cond-surface cond-surface-2 cond-drift-back" href="#condWave"/>
+          </g>
+          <!-- the part riding above the surface -->
+          <g clip-path="url(#condAbove)">
+            <g class="cond-bob">
+              <circle class="cond-above" cx="160" cy="160" r="128"/>
+              <circle class="cond-sheen" cx="160" cy="160" r="128" fill="url(#condSheen)"/>
+            </g>
+          </g>
+          <use class="cond-surface cond-surface-1 cond-drift" href="#condWave"/>
         </g>
-        <g clip-path="url(#condAbove)">
-          <circle class="cond-above" cx="160" cy="160" r="128"/>
-          <circle class="cond-sheen" cx="160" cy="160" r="128" fill="url(#condSheen)"/>
-        </g>
-        <line class="cond-line" x1="4" y1="126" x2="316" y2="126"/>
       </svg>
       <ul class="cond-ex cond-ex-below">
         <li>Assumptions about the future</li>
@@ -1615,11 +1718,8 @@
     <div class="section-head reveal">
       <div class="eyebrow">WHO HOLDS THE LINE</div>
       <h2>Governance that can’t be voted back onto the market</h2>
-      <div class="plain-summary">
-        <span class="ps-label">In plain terms</span>
-        <p>We need rules that stop this work being sold off or quietly undone later — similar to how some housing co-ops are set up so no single vote can ever put the building back on the open market.</p>
-      </div>
-      <p>For a council leader, this is the answer to “who else is doing this and how do we join.” For national government, it’s the delivery chain a policy actually runs through. In Germany’s <em>Mietshäuser Syndikat</em>, a tenants’ association and a wider syndicate each hold 50% of a building — so no single vote, however popular, can ever put it back on the speculative market. The question underneath this portfolio is whether food infrastructure can be governed the same way.</p>
+      <p>We need rules that stop this work being sold off or quietly undone later — similar to how some housing co-ops are set up so no single vote can ever put the building back on the speculative market (<em>Mietshäuser Syndikat</em>). The question is then:</p>
+      <p class="gov-question">Can food infrastructure be governed in a way that stays “with the people” and scales at the same time?</p>
     </div>
     <figure class="gov-lock reveal">
       <div class="gov-lock-scroll">
@@ -1768,17 +1868,27 @@
           </figure>
         </div>
       </div>
-      <div class="callout reveal">
-        <span class="code">ACCOUNTABILITY LAYER</span>
-        <p>A charter sits above individual projects: minimum requirements to count as a genuine partner, and visibility between members so nobody drifts from the same goal. A food bank can be a member — but only if it’s providing real wraparound support, not a parcel and a goodbye.</p>
-        <p>The same logic extends to a borough market’s trader waiting list, hotel-development leases, and any contract long enough to lock in a supplier’s behaviour rather than just their price.</p>
-        <p>In practice, that means people nominate themselves for a workstream and declare, in front of the group, where they want to be in six months — soft accountability that turns “come and collaborate” into something with an actual deadline.</p>
+      <div class="note-block reveal">
+        <div class="note-head">
+          <button type="button" class="rp-note" aria-expanded="false" aria-controls="accountNote">Accountability layer</button>
+          <p class="note-lead">A charter sits across all three tiers: what it takes to count as a genuine partner, and visibility between members so nobody drifts.</p>
+        </div>
+        <div class="note-body" id="accountNote" role="region" aria-label="The accountability layer">
+          <p>A charter sits above individual projects: minimum requirements to count as a genuine partner, and visibility between members so nobody drifts from the same goal. A food bank can be a member — but only if it’s providing real wraparound support, not a parcel and a goodbye.</p>
+          <p>The same logic extends to a borough market’s trader waiting list, hotel-development leases, and any contract long enough to lock in a supplier’s behaviour rather than just their price.</p>
+          <p>In practice, that means people nominate themselves for a workstream and declare, in front of the group, where they want to be in six months — soft accountability that turns “come and collaborate” into something with an actual deadline.</p>
+        </div>
       </div>
     </div>
-    <div class="precedent-note reveal">
-      <span class="code" style="color:var(--supply);">PRECEDENT</span>
-      <p>This isn’t the first time the “as infrastructure” reframe has done real work inside Dark Matter Labs. <a href="https://darkmatterlabs.org/initiatives/treesai" target="_blank" rel="noopener">Trees as Infrastructure (TreesAI)</a> made the same move for urban canopy — building the funding infrastructure for something previously treated as decoration. Food follows the same logic, one step down the same road.</p>
-      <p style="margin-top:14px;">Dark Matter Labs’ role here is researcher, coordinator, and orchestrator of the work and the funding behind it. Camden is one of several London boroughs genuinely moving the needle on this — a partner, not a commissioner — each testing a local answer to what is, underneath, a global pattern. Cities everywhere are hitting the same wall: food fragility that no single council, or country, can price its way out of alone.</p>
+    <div class="note-block precedent-row reveal">
+      <div class="note-head">
+        <button type="button" class="rp-note" aria-expanded="false" aria-controls="precedentNote" style="color:var(--supply);">Precedent &amp; our role</button>
+        <p class="note-lead">The “as infrastructure” move has done this work before — for urban canopy, through TreesAI.</p>
+      </div>
+      <div class="note-body" id="precedentNote" role="region" aria-label="Precedent and our role">
+        <p>This isn’t the first time the “as infrastructure” reframe has done real work inside Dark Matter Labs. <a href="https://darkmatterlabs.org/initiatives/treesai" target="_blank" rel="noopener">Trees as Infrastructure (TreesAI)</a> made the same move for urban canopy — building the funding infrastructure for something previously treated as decoration. Food follows the same logic, one step down the same road.</p>
+        <p>Dark Matter Labs’ role here is researcher, coordinator, and orchestrator of the work and the funding behind it. Camden is one of several London boroughs genuinely moving the needle on this — a partner, not a commissioner — each testing a local answer to what is, underneath, a global pattern. Cities everywhere are hitting the same wall: food fragility that no single council, or country, can price its way out of alone.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -2159,7 +2269,7 @@
         c.d = Math.hypot(c.x - camden.x, c.y - camden.y);
         if(c.d > max) max = c.d;
       });
-      var BASE = [26,26,26], ACCENT = [255,90,31];
+      var BASE = [26,26,26], ACCENT = [74,132,208];
       centres.forEach(function(c, i){
         var d = max ? c.d / max : 0;
         var warm = Math.pow(1 - d, 1.7) * 0.62;      // 1 at Camden, easing off
@@ -2266,6 +2376,7 @@
       if(!pop) return;
       btn.addEventListener('pointerenter', place);
       btn.addEventListener('focus', place);
+      btn.addEventListener('focusin', place);
       window.addEventListener('resize', place);
       window.addEventListener('load', place);
       place();
@@ -2276,6 +2387,34 @@
         if(r.left + shift < pad) shift = pad - r.left;
         if(shift) pop.style.marginLeft = Math.round(shift) + 'px';
       }
+    });
+
+    /* the two long notes expand in place. A floating pop you have to keep the
+       pointer inside is the wrong shape for several paragraphs, so these open
+       downwards and stay open -- measured rather than given a fixed cap, so
+       the reveal lasts as long as the text is tall. */
+    document.querySelectorAll('.note-block').forEach(function(block){
+      var btn = block.querySelector('.rp-note');
+      var body = block.querySelector('.note-body');
+      if(!btn || !body) return;
+      function set(open){
+        block.setAttribute('data-open', String(open));
+        btn.setAttribute('aria-expanded', String(open));
+        body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+      }
+      set(false);
+      btn.addEventListener('click', function(){ set(block.getAttribute('data-open') !== 'true'); });
+      block.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' || e.key === 'Esc'){ set(false); btn.focus(); }
+      });
+      // a reflow changes how tall the open text is
+      window.addEventListener('resize', function(){
+        if(block.getAttribute('data-open') === 'true'){
+          body.style.maxHeight = 'none';
+          var h = body.scrollHeight;
+          body.style.maxHeight = h + 'px';
+        }
+      });
     });
 
     /* ---- the crisis chart draws itself when it comes into view ---- */
@@ -2315,6 +2454,38 @@
        from the table, so the items are written in one place only. The wave is
        GPU noise we can't reproduce exactly in JS, so a pill tracks the centre
        of its band and glides within it rather than chasing one strand. */
+    /* The wave itself answers to the pointer, not only the text beside it.
+       The canvas is WebGL, so there is nothing in it to hover -- four
+       invisible zones stand in for the bands, split at the midpoints between
+       band centres, and each drives the state its own text block drives by
+       dispatching to that block rather than keeping a second copy of the
+       mapping. */
+    (function bandHover(){
+      var stage = document.querySelector('#foundations .rp-stage');
+      if(!stage) return;
+      var rungs = ['top', 'buy', 'mid', 'bot'].map(function(key){
+        var band = document.querySelector('#foundations .rp-band[data-band="' + key + '"]');
+        return band && band.closest('.rp-fnd');
+      });
+      if(rungs.some(function(r){ return !r; })) return;
+      var hit = document.createElement('div');
+      hit.className = 'rp-hit';
+      hit.setAttribute('aria-hidden', 'true');
+      rungs.forEach(function(fnd){
+        var zone = document.createElement('span');
+        zone.addEventListener('mouseenter', function(){
+          fnd.classList.add('is-hot');
+          fnd.dispatchEvent(new MouseEvent('mouseenter'));
+        });
+        zone.addEventListener('mouseleave', function(){
+          fnd.classList.remove('is-hot');
+          fnd.dispatchEvent(new MouseEvent('mouseleave'));
+        });
+        hit.appendChild(zone);
+      });
+      stage.appendChild(hit);
+    })();
+
     (function portfolio(){
       var section = document.getElementById('foundations');
       var pf = document.getElementById('tracks');
@@ -2328,7 +2499,7 @@
       var SPAN = 0.62, INNER = SPAN / 3;
       var BANDS = [
         {sel:'.track.pw-01', key:'top', y: SPAN,  tk:'#e7964b'},
-        {sel:'.track.pw-02', key:'buy', y: INNER, tk:'#8fb0ff'},
+        {sel:'.track.pw-02', key:'buy', y: INNER, tk:'#a98cf5'},
         {sel:'.track.pw-03', key:'mid', y:-INNER, tk:'#c9ced3'},
         {sel:'.track.pw-04', key:'bot', y:-SPAN,  tk:'#4fb488'}
       ];
@@ -2458,7 +2629,68 @@
       placePills();
       if(narrow.addEventListener) narrow.addEventListener('change', placePills);
       layout(0);
-      window.addEventListener('resize', function(){ layout(clock()); });
+
+      /* The four rungs share one fixed-height column, so rather than trust a
+         clamp to guess right at every window height, measure what the text
+         wants, compare it with the column, and scale the type down until it
+         fits -- correcting a few times for the reflow shrinking causes. */
+      var labels = section.querySelector('.rp-labels');
+      var rungs = labels ? [].slice.call(labels.querySelectorAll('.rp-fnd')) : [];
+      var pendingFit = false;
+      function fitLabels(){
+        if(!labels || !rungs.length) return;
+        if(getComputedStyle(labels).position !== 'absolute'){ labels.style.removeProperty('--fs'); return; }
+        var FLOOR = 0.8;
+        labels.classList.remove('is-tight');
+        rungs.forEach(function(r){ var p = r.querySelector('p'); if(p) p.style.removeProperty('--lines'); });
+        var scale = 1;
+        for(var pass = 0; pass < 5; pass++){
+          labels.style.setProperty('--fs', scale.toFixed(3));
+          var gap = parseFloat(getComputedStyle(labels).rowGap) || 0;
+          var want = rungs.reduce(function(sum, r){ return sum + r.offsetHeight; }, 0) + gap * (rungs.length - 1);
+          var have = labels.clientHeight;
+          if(!want || !have || want <= have - 1) break;
+          var next = Math.max(FLOOR, scale * (have / want));
+          if(Math.abs(next - scale) < 0.004){ scale = next; labels.style.setProperty('--fs', scale.toFixed(3)); break; }
+          scale = next;
+        }
+        // still over at the floor: give each rung the lines it can actually show
+        var gapNow = parseFloat(getComputedStyle(labels).rowGap) || 0;
+        var total = rungs.reduce(function(sum, r){ return sum + r.offsetHeight; }, 0) + gapNow * (rungs.length - 1);
+        if(total > labels.clientHeight + 1){
+          labels.classList.add('is-tight');
+          var room = (labels.clientHeight - gapNow * (rungs.length - 1)) / rungs.length;
+          rungs.forEach(function(r){
+            var p = r.querySelector('p');
+            if(!p) return;
+            var lineH = parseFloat(getComputedStyle(p).lineHeight) || 15;
+            var chrome = r.offsetHeight - p.offsetHeight;
+            p.style.setProperty('--lines', Math.max(1, Math.floor((room - chrome) / lineH)));
+          });
+          // headings wrap differently rung to rung, so trim the tallest one
+          // at a time until the column really is clear
+          for(var trim = 0; trim < 8; trim++){
+            var over = rungs.reduce(function(sum, r){ return sum + r.offsetHeight; }, 0) + gapNow * (rungs.length - 1) - labels.clientHeight;
+            if(over <= 1) break;
+            var worst = null, worstLines = 0;
+            rungs.forEach(function(r){
+              var p = r.querySelector('p');
+              var n = p ? parseInt(p.style.getPropertyValue('--lines'), 10) : 0;
+              if(p && n > worstLines){ worstLines = n; worst = p; }
+            });
+            if(!worst || worstLines <= 1) break;
+            worst.style.setProperty('--lines', worstLines - 1);
+          }
+        }
+      }
+      fitLabels();
+      if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
+      window.addEventListener('resize', function(){
+        layout(clock());
+        // the descriptions are collapsed in the portfolio view, so measuring
+        // them there would read a height they do not keep
+        if(live) pendingFit = true; else fitLabels();
+      });
       if(window.ResizeObserver) new ResizeObserver(function(){ layout(clock()); }).observe(canvas);
 
       /* The figure pins when it reaches the top of the viewport and only becomes
@@ -2476,6 +2708,7 @@
         live = on;
         section.setAttribute('data-pfstage', on ? 'portfolio' : 'pathways');
         if(on) layout(clock());
+        else if(pendingFit){ pendingFit = false; setTimeout(fitLabels, 780); }
       }
       function check(){
         if(!figure) return;
@@ -2514,7 +2747,7 @@
 
   });
 </script>
-<script type="module" src="assets/foundations/wave.js?v=19"></script>
+<script type="module" src="assets/foundations/wave.js?v=20"></script>
 
 </body>
 </html>
